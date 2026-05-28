@@ -2,19 +2,19 @@
 @using System.Drawing
 
 
-  <style>
-      :root {
-        --board-bg:
-          @ColorTranslator.ToHtml(BoardColor)
-        ;
-        --player1:
-          @ColorTranslator.ToHtml(Player1Color)
-        ;
-        --player2:
-          @ColorTranslator.ToHtml(Player2Color)
-        ;
-      }
-  </style>
+<style>
+  :root {
+    --board-bg:
+      @ColorTranslator.ToHtml(BoardColor)
+    ;
+    --player1:
+      @ColorTranslator.ToHtml(Player1Color)
+    ;
+    --player2:
+      @ColorTranslator.ToHtml(Player2Color)
+    ;
+  }
+</style>
 
 
 <nav>
@@ -22,7 +22,7 @@
   {
     var col = i;
     int columnNumber = i + 1;
-    
+
     <span aria-label="column @columnNumber" title="Click to play a piece" @onclick="() => PlayPiece(col)">🔽</span>
   }
 </nav>
@@ -47,71 +47,72 @@
   }
   <p><strong>Total wins</strong><br /> Player 1: @State.totalWinsPlayer1 <br />Player 2: @State.totalWinsPlayer2 </p>
   <ul>
-  @for (var i = 0; i < plays.Count; i ++) {
-    <li>@plays[i]</li>
-  }
+    @for (var i = 0; i < plays.Count; i++)
+    {
+      <li>@plays[i]</li>
+    }
   </ul>
 </div>
 @code {
-    private string[] pieces = new string[42];
-    private string winnerMessage = string.Empty;
-    private string errorMessage = string.Empty;
-    private List<string> plays = [];
-    private string CurrentTurn => (winnerMessage == string.Empty) ? $"Player {State.PlayerTurn}'s Turn" : "";
-    private string ResetStyle => (winnerMessage == string.Empty) ? "display: none;" : "";
-    private void PlayPiece(byte col)
+  private string[] pieces = new string[42];
+  private string winnerMessage = string.Empty;
+  private string errorMessage = string.Empty;
+  private List<string> plays = [];
+  private string CurrentTurn => (winnerMessage == string.Empty) ? $"Player {State.PlayerTurn}'s Turn" : "";
+  private string ResetStyle => (winnerMessage == string.Empty) ? "display: none;" : "";
+  private void PlayPiece(byte col)
+  {
+    errorMessage = string.Empty;
+    try
     {
-        errorMessage = string.Empty;
-        try
-        {
-            var player = State.PlayerTurn;
-            var turn = State.CurrentTurn;
-            var landingRow = State.PlayPiece(col);
-            pieces[turn] = $"player{player} col{col} drop{landingRow}";
-            plays.Add($"Player: {player}, Column: {col}, Row: {landingRow}");
+      var player = State.PlayerTurn;
+      var turn = State.CurrentTurn;
+      var landingRow = State.PlayPiece(col);
+      pieces[turn] = $"player{player} col{col} drop{landingRow}";
+      plays.Add($"Player: {player}, Column: {col}, Row: {landingRow}");
 
-            var winState = State.CheckForWin();
-            if (winState == GameState.WinState.Player1_Wins)
-            {
-                State.totalWinsPlayer1++;
-                winnerMessage = "Player 1 Wins! 🎉";
-            }
-            else if (winState == GameState.WinState.Player2_Wins)
-            {
-                State.totalWinsPlayer2++;
-                winnerMessage = "Player 2 Wins! 🎉";
-            }
-            else if (winState == GameState.WinState.Tie)
-            {
-                winnerMessage = "It's a Tie!";
-            }
-        }
-        catch (ArgumentException ex)
-        {
-            errorMessage = ex.Message;
-        }
+      var winState = State.CheckForWin();
+      if (winState == GameState.WinState.Player1_Wins)
+      {
+        State.totalWinsPlayer1++;
+        winnerMessage = "Player 1 Wins! 🎉";
+      }
+      else if (winState == GameState.WinState.Player2_Wins)
+      {
+        State.totalWinsPlayer2++;
+        winnerMessage = "Player 2 Wins! 🎉";
+      }
+      else if (winState == GameState.WinState.Tie)
+      {
+        winnerMessage = "It's a Tie!";
+      }
     }
-
-    private void ResetGame()
+    catch (ArgumentException ex)
     {
-        State.ResetBoard();
-        winnerMessage = string.Empty;
-        errorMessage = string.Empty;
-        pieces = new string[42];
-        plays.Clear();
+      errorMessage = ex.Message;
     }
+  }
 
-    [Parameter]
-    public Color BoardColor { get; set; } = ColorTranslator.FromHtml("yellow");
+  private void ResetGame()
+  {
+    State.ResetBoard();
+    winnerMessage = string.Empty;
+    errorMessage = string.Empty;
+    pieces = new string[42];
+    plays.Clear();
+  }
 
-    [Parameter]
-    public Color Player1Color { get; set; } = ColorTranslator.FromHtml("red");
+  [Parameter]
+  public Color BoardColor { get; set; } = ColorTranslator.FromHtml("yellow");
 
-    [Parameter]
-    public Color Player2Color { get; set; } = ColorTranslator.FromHtml("blue");
-    protected override void OnInitialized()
-    {
-        State.ResetBoard();
-    }
+  [Parameter]
+  public Color Player1Color { get; set; } = ColorTranslator.FromHtml("red");
+
+  [Parameter]
+  public Color Player2Color { get; set; } = ColorTranslator.FromHtml("blue");
+  protected override void OnInitialized()
+  {
+    State.ResetBoard();
+  }
 }
 
