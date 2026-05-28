@@ -1,0 +1,43 @@
+﻿@page "/"
+@using System.Drawing
+@rendermode InteractiveServer
+
+<PageTitle>Home</PageTitle>
+
+@if (colorSelected == false)
+{
+  <div class="color">
+    <label>Player 1
+    <select @bind="player1Color">
+      <option value="">Choose a Color</option>
+      <option value="Blue">Blue</option>
+      <option value="Purple">Purple</option>
+      <option value="Pink">Pink</option>
+    </select>
+    </label>
+    <label>Player 2
+    <select @bind="player2Color">
+      <option value="">Choose a Color</option>
+      <option value="Green">Green</option>
+      <option value="Yellow">Yellow</option>
+      <option value="Red">Red</option>
+    </select>
+    </label>
+
+    <button aria-label="Start Playing" @onclick="() => colorSelected = true">Start Playing</button>
+  </div>
+}
+else
+{
+
+  <Board 
+  BoardColor="Color.Black" 
+  Player1Color="@(string.IsNullOrEmpty(player1Color) ? Color.Blue : ColorTranslator.FromHtml(player1Color))" 
+  Player2Color="@(string.IsNullOrEmpty(player2Color) ? Color.Green : ColorTranslator.FromHtml(player2Color))" />
+}
+
+@code {
+  public string player1Color = "";
+  public string player2Color = "";
+  public bool colorSelected = false;
+}

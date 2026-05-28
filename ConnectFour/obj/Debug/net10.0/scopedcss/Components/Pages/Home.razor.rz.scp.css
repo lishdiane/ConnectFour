@@ -1,0 +1,22 @@
+.color[b-z4z2kvzfgd] { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 15px;
+    max-width: 300px;
+}
+
+.color label[b-z4z2kvzfgd] {
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+
+    select {
+      height: 35px;
+    }
+}
+
+.color button[b-z4z2kvzfgd] {
+    margin: 10px auto;
+    padding: 8px;
+    width: 80%;
+}
